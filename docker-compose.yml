@@ -1,0 +1,86 @@
+version: '3.6'
+
+services:
+  ordercontainer:
+    container_name: ordercontainer-api
+    image: ordercontainer-api
+    build:
+      context: .
+      dockerfile: Posts/PostAPI/Dockerfile
+    ports:
+      - 7171:8080
+
+  identitycontainer:
+    container_name: identitycontainer-api
+    image: identitycontainer-api
+    build:
+      context: .
+      dockerfile: IdentityServer/IdentityServerAPI/Dockerfile
+    ports:
+      - 7170:8080
+
+  newcontainer:
+    container_name: newcontainer-api
+    image: newcontainer-api
+    build:
+      context: .
+      dockerfile: News/NewAPI/Dockerfile
+    ports:
+      - 7172:8080
+
+  aggregatorcontainer:
+    container_name: aggregatorcontainer-api
+    image: aggregatorcontainer-api
+    build:
+      context: .
+      dockerfile: ApiGateWay/Aggregator/Dockerfile
+    ports:
+      - 7173:8080
+
+  ocelotcontainer:
+    container_name: ocelotcontainer-api
+    image: ocelotcontainer-api
+    build:
+      context: .
+      dockerfile: ApiGateWay/OcelotGateWay/Dockerfile
+    ports:
+      - 7174:8080
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.11-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+
+  elasticsearch:
+    container_name: els
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.7.1
+    ports:
+      - 9200:9200
+    volumes:
+      - elasticsearch-data:/usr/share/elasticsearch/data
+    environment:
+      - xpack.security.enabled=false
+      - discovery.type=single-node
+    networks:
+      - elastic
+
+  kibana:
+    container_name: kibana
+    image: docker.elastic.co/kibana/kibana:8.7.1
+    ports: 
+      - 5601:5601
+    depends_on:
+      - elasticsearch
+    environment:
+      - ELASTICSEARCH_URL=http://elasticsearch:9200
+    networks:
+      - elastic
+
+networks:
+  elastic:
+    driver: bridge
+    
+volumes:
+  elasticsearch-data:

@@ -1,0 +1,18 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "PostService";
+
+
+service GrpcPost_User{
+	rpc GetAllPost_User (GetAllPost_UserRequest) returns (Post_UserResponse);
+}
+
+message GetAllPost_UserRequest {}
+
+message GrpcPost_UserModel{
+	string Id =1;
+}
+
+message Post_UserResponse{
+	repeated GrpcPost_UserModel post_user = 1;
+}

@@ -1,0 +1,40 @@
+﻿{
+	"Routes": [
+		{
+			"UpstreamPathTemplate": "/ocelot/GetPost_User",
+			"UpstreamHttpMethod": [ "Get" ],
+
+			"DownstreamScheme": "https",
+			"DownstreamHostAndPorts": [
+				{
+					"Host": "localhost",
+					"Port": 7225
+				}
+			],
+			"DownstreamPathTemplate": "/Post/GetAllPost_User"
+		},
+
+
+		{
+			"UpstreamPathTemplate": "/ocelot/polly",
+			"UpstreamHttpMethod": [ "Get" ],
+
+			"DownstreamScheme": "https",
+			"DownstreamHostAndPorts": [
+				{
+					"Host": "localhost",
+					"Port": 7057
+				}
+			],
+			"DownstreamPathTemplate": "/New/CheckPollyNews",
+			"QoSOptions": {
+				"ExceptionsAllowedBeforeBreaking": 5,
+				"DurationOfBreak": 10000,
+				"TimeoutValue": 2000
+			}
+		}
+	],
+	"GlobalConfiguration": {
+		"BaseUrl": "https://localhost:5000"
+	}
+}
